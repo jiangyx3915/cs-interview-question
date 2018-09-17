@@ -273,3 +273,114 @@ b = a
 
 #### 5.2.2、浅拷贝
 
+浅拷贝会创建新的对象，其内容并不是原对象本身的引用，而是原对象内第一层对象的引用。
+
+浅拷贝有三种形式：切片操作，工厂函数、copy模块中的copy函数。
+
+```python
+a = [1, 2, "hello", ['python', 'java']]
+# 切片操作
+b = a[:]
+b = [x for x in a]
+# 工厂函数
+b = list(a)
+# copy 函数
+import copy
+b = copy.copy(a)
+```
+
+浅拷贝产生的列表b不再是列表a了，使用`is`判断可以知道它们并不是同一个对象，使用`id()`查看，它们也不指向同一片内存空间。但是当使用`id(x) for x in a` 和 `id(x) for x in b`来查看a和b中元素的地址时，可以看到二者包含的元素的地址是相同的。
+
+在这种情况下，列表a和b是不同的对象，修改列表a理论上不会影响列表b。但是要注意的是，浅拷贝仅仅只是拷贝了一层。在列表a中有一个嵌套的list，如果修改了这个元素，则列表b也会随之收到影响。
+
+```python
+a = [1, 2, "hello", ['python', 'java']]
+
+# 进行浅拷贝
+b = a[:]
+print(a)  # [1, 2, "hello", ['python', 'java']]
+print(b)  # [1, 2, "hello", ['python', 'java']]
+
+# 修改不可变类型
+a[0] = 'world'
+print(a)  # ['world', 2, "hello", ['python', 'java']]
+print(b)  # [1, 2, "hello", ['python', 'java']]
+
+# 修改可变类型中的元素
+a[3].append('go')
+print(a)  # ['world', 2, "hello", ['python', 'java', 'go']]
+print(b)  # [1, 2, "hello", ['python', 'java', 'go']]
+```
+
+> 如上述代码那样，修改外层元素则会修改它的引用，让它们指向别的位置。而修改嵌套的列表中元素，列表的地址并未发生变化，指向的都是同一个位置。但如果是使用`a[3]=[1, 2, 3]`直接修改第一层的引用，则列表b不会受到影响。
+
+#### 5.2.3、深拷贝
+
+深拷贝只有一种形式：copy.deepcopy()
+
+深拷贝和浅拷贝对应，深拷贝是拷贝了对象的所有元素，包括多层嵌套的元素。因此，深拷贝的时间和空间开销更高。
+
+```python
+import copy
+a = [1, 2, "hello", ['python', 'java']]
+# 进行深拷贝
+b = copy.deepcopy()
+print(a)  # [1, 2, "hello", ['python', 'java']]
+print(b)  # [1, 2, "hello", ['python', 'java']]
+# 修改可变对象的元素
+a[3].append('go')
+print(a)  # [1, 2, "hello", ['python', 'java', 'go']]
+print(b)  # [1, 2, "hello", ['python', 'java']]
+```
+
+> 即使嵌套的列表具有更深的层次，也不会产生任何影响，因为深拷贝拷贝出来的对象是一个全新的的对象，与原来的对象没有任何的关联。
+
+#### 5.2.4、拷贝的注意点
+
+对于非容器类型，例如数字、字符以及其它的`原子`类型，没有拷贝一说，产生的都是对原对象的引用。
+
+如果元组变量包含原子类型对象，即使采用可深拷贝，也只能得到浅拷贝。
+
+### 5.3、`__init__` 和 `__new__` 的区别?
+
+`__init__`调用在对象创建后，是对对象进行初始化操作。
+
+`__new__`是在对象创建之前创建一个对象，并将创建的对象返回给`__init__`。
+
+### 5.4、Python中如何生成随机数?
+
+> 在Python中用于生成随机数的模块是`random`
+
+```python
+import random
+
+random.random()  # 生成一个0-1之间的随机浮点数
+random.uniform(a, b)  # 生成[a, b]之间的浮点数
+random.randint(a, b)  # 生成[a, b]之间的整数
+random.randrange(a, b, step)  # 在指定的集合[a, b)中，以step为基数随机取一个数
+random.choice(sequence)  # 从特定序列中随机取一个元素，这里的序列可以是字符串、列表、元组等
+```
+
+### 5.5、输入某年某月某日，判断这一天是这一年的第几天?
+
+```python
+import datetime
+
+def day_of_year():
+    year = input('请输入年份:')
+    month = input('请输入月份:')
+    day = input('请输入天:')
+    date1 = datetime.date(year=int(year), month=int(month), day=int(day))
+    date2 = datetime.date(year=int(year), month=1, day=1)
+    return (date1-date2).days + 1
+```
+
+### 5.6、如何打乱一个排好序的list对象?
+
+```python
+import random
+a = [1, 2, 3, 4, 5]
+random.shuffle(a)
+print(a)
+```
+
