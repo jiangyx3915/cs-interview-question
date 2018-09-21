@@ -504,7 +504,59 @@ Python2中使用ASCII码作为默认编码方式导致了string有两种类型�
 | str     | bytes   | 字节 | encode | 存储 |
 | unicode | str     | 字符 | decode | 显示 |
 
-##### 6.5.2、Python3采用绝对路径的方式进行import
+##### 6.5.1.2、Python3采用绝对路径的方式进行import
 
 Python2中相对路径的import会导致标准库导入变的困难（例如，在同一目录下有file.py，如何同时导入这个文件和标准库file）。Python3中这一点被修改，如果还需要导入同一目录的文件则必须使用绝对路径。
+
+##### 6.5.1.3、老式类和新式类
+
+Python2中存在老式类和新式类的区别，Python3统一采用新式类。新式类声明要求继承object，必须使用新石磊应用多重继承。
+
+##### 6.5.1.4、缩进
+
+Python3使用更加严格的缩进。Python2中的缩进机制中，1个tab和8个space是等价的，所以在缩进中可以同时允许tab和space共存。这种等价机制会导致部分IDE使用存在问题。Python3中1个tab职能找另一个tab替代，因此tab和space共存会导致报错`TabError: inconsistent use of tabs and spaces in indentation`。
+
+#### 6.5.2、废弃类差异
+
+* print语句被Python3废弃，统一使用print函数
+* exec语句被Python3废弃，统一使用exec函数
+* execfile语句被Python3废弃，推荐使用exec(open('filename').read())
+* 不相等操作符`<>`被Python3废弃，统一使用`!=`
+* long整数类型被Python3废弃，统一使用int
+* xrange函数被Python3废弃，统一使用range，Python3中的range机制也进行修改并提高了大数据集生成的效率
+* Python3中的这些方法不再返回list对象：字典相关的keys(),values(),items(),zip(),map(),filter()，但是可以通过list强行转换
+* 迭代器iterator的next函数被Python3废弃，统一使用next(iterator)
+* raw_input函数被Python3废弃，统一使用input函数
+* 字典变量的has_key函数被Python废弃，统一使用关键词in
+* file函数被Python3废弃，统一使用open来处理文件
+* apply函数被Python3废弃
+* 异常StandardError被Python3废弃，统一使用Exception
+
+#### 6.5.3、修改类差异
+
+##### 6.5.3.1、浮点数除法操作符`/`和`//`的区别
+
+`/`：在Python2中，如果两个整形数进行运算，结果为整形，若两个数中有一个为浮点数，则结果为浮点数。而在Python3中，运算结果不再根据参加运算的数的类型。
+
+`//`:在Python2中，返回小于运算结果的最大整数，从类型上讲，与`/`运算符返回类型逻辑一致。Python3和Python2运算结果一样。
+
+##### 6.5.3.2、异常抛出和捕捉机制区别
+
+```python
+# Python2
+raise IOError, 'file error'  # 抛出异常
+except NameError, err  # 捕捉异常
+
+# Python3
+raise IOError('file error') #  抛出异常
+except NameError as err  # 捕捉异常
+```
+
+##### 6.5.3.3、for循环变量值区别
+
+```python
+# Python2中，for循环会修改外部相同名称变量的值
+i = 1
+print('result: ')
+```
 
