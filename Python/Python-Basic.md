@@ -557,6 +557,45 @@ except NameError as err  # 捕捉异常
 ```python
 # Python2中，for循环会修改外部相同名称变量的值
 i = 1
-print('result: ')
+print('result: ', [i for i in range(5)])
+print('after: i = ', i) # i = 4
+
+# Python3，for循环不会修改外部相同名称变量的值
+i = 1
+print('result: ', [i for i in range(5)])
+print('after: i = i', i) # i = 1
 ```
 
+##### 6.5.3.4、round函数返回值区别
+
+```python
+# Python2, round函数返回float类型
+isinstance(round(15.5), float) # True
+
+# Python3，round函数返回int类型
+isinstance(round(15.5), int) # False
+```
+
+##### 6.5.3.5、比较操作符区别
+
+```python
+# Python2 中任意两种数据类型都可以比较
+11 < 'test' # True
+
+# Python3 中只有同一数据类型的对象可以比较
+11 < 'test' # TypeError: unorderable types: int() < str()
+```
+
+### 6.6、有什么手段能提升Python程序运行方面的性能？
+
+* 使用多进程，充分利用机器多核性能
+* 对于性能影响较大的部分代码，可以使用C或C++编写
+* 对于IO阻塞造成的性能影响，可以使用IO多路复用来解决
+* 尽量使用Python的内建函数
+* 尽量使用局部变量
+
+### 6.7、Python中的作用域？
+
+在Python中，一个变量的作用域总是由在代码中被赋值的地方所决定。当Python遇到一个变量的话，会按照以下顺序进行搜索：
+
+本地作用域(Loacl) -> 当前作用域被嵌入的本地作用域(Enclosing locals) -> 全局/模块作用域(Global) -> 内置作用域(Built-in)
